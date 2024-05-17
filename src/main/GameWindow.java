@@ -10,9 +10,7 @@ public class GameWindow extends JFrame {
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.add(gamePanel);
-        setLocationRelativeTo(null);
         this.pack();
-        this.setVisible(true);
         addWindowFocusListener(new WindowFocusListener() {
             @Override
             public void windowGainedFocus(WindowEvent e) {
@@ -24,5 +22,7 @@ public class GameWindow extends JFrame {
                 gamePanel.getGame().focusLost();
             }
         });
+        setLocationRelativeTo(null);
+        this.setVisible(true);
     }
 }

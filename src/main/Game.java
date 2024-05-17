@@ -1,19 +1,17 @@
 package main;
 
+import levels.LevelHandler;
 import creatures.Player;
+import utils.Constants;
 
 import java.awt.*;
 
 public class Game implements Runnable {
-    private GameWindow gameWindow;
-    private GamePanel gamePanel;
-    private Thread gameLoop;
+    private final GameWindow gameWindow;
+    private final GamePanel gamePanel;
 
     private Player player;
-
-
-    private final int FPS = 120;
-    private final int UPS = 200;
+    private LevelHandler levelHandler;
 
     public Game() {
         init();
@@ -26,26 +24,30 @@ public class Game implements Runnable {
     }
 
     private void init() {
-        player = new Player(100, 100);
+        levelHandler = new LevelHandler(this);
+        player = new Player(10, 500, Constants.Player.SPRITE_WIDTH, Constants.Player.SPRITE_HEIGHT);
+        player.setLvlData(levelHandler.getLevel().getLvlData());
     }
 
     public void start() {
-        gameLoop = new Thread(this);
+        Thread gameLoop = new Thread(this);
         gameLoop.start();
     }
 
     public void update() {
         player.update();
+        levelHandler.update();
     }
 
     public void render(Graphics g) {
+        levelHandler.render(g);
         player.render(g);
     }
 
     @Override
     public void run() {
-        double timePerFrame = 1000000000.0 / FPS;
-        double timePerUpdate = 1000000000.0 / UPS;
+        double timePerFrame = 1000000000.0 / Constants.Config.FPS;
+        double timePerUpdate = 1000000000.0 / Constants.Config.UPS;
 
         int frames = 0;
         int updates = 0;
@@ -58,7 +60,7 @@ public class Game implements Runnable {
         long lastCheck = System.currentTimeMillis();
 
 
-        while (true) {
+        while (gameWindow.isVisible()) {
             long currentTime = System.nanoTime();
 
             deltaU += (currentTime - previous) / timePerUpdate;

@@ -2,15 +2,16 @@ package main;
 
 import input.KeyboardInput;
 import input.MouseInput;
+import static utils.Constants.Config;
 
 import javax.swing.*;
 import java.awt.*;
 
 
 public class GamePanel extends JPanel {
-    private KeyboardInput keyboardInput = new KeyboardInput(this);
-    private MouseInput mouseInput = new MouseInput(this);
-    private Game game;
+    private final KeyboardInput keyboardInput = new KeyboardInput(this);
+    private final MouseInput mouseInput = new MouseInput(this);
+    private final Game game;
 
     public GamePanel(Game game) {
         this.game = game;
@@ -24,7 +25,7 @@ public class GamePanel extends JPanel {
 
 
     public void setPanelSize() {
-        this.setPreferredSize(new Dimension(800, 600));
+        this.setPreferredSize(new Dimension(Config.WIDTH, Config.HEIGHT));
     }
 
     public void updateGame() {
