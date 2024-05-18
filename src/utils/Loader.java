@@ -44,4 +44,15 @@ public class Loader {
         }
         return lvlData;
     }
+
+    public static Font getFont(String path, float size) {
+        Font font = null;
+        InputStream inputStream = ClassLoader.getSystemResourceAsStream(path);
+        try {
+            font = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(inputStream)).deriveFont(size);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
+        return font;
+    }
 }

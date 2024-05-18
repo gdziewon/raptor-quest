@@ -14,7 +14,7 @@ public class Player extends Creature{
     // 1. bite 2. dead 3. falling 4. jump 5. on hit 6. pounce 7. pounced attack 8. pounce end 9. pounce latched 10. ready pounce 11. roar. 12. run 13. scanning 14. walk
     private int aniTick, aniIndex;
     private int playerAction = IDLE;
-    private boolean left, right, up, down, jump;
+    private boolean left, right, jump;
     private boolean moving = false, attacking = false, inAir = false;
     private int[][] lvlData;
     private float airSpeed = 0f;
@@ -150,28 +150,10 @@ public class Player extends Creature{
     public void resetMovement() {
         left = false;
         right = false;
-        up = false;
-        down = false;
     }
 
     public void setAttacking(boolean attacking) {
         this.attacking = attacking;
-    }
-
-    public boolean isDown() {
-        return down;
-    }
-
-    public void setDown(boolean down) {
-        this.down = down;
-    }
-
-    public boolean isUp() {
-        return up;
-    }
-
-    public void setUp(boolean up) {
-        this.up = up;
     }
 
     public boolean isRight() {

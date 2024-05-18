@@ -2,9 +2,10 @@ package main;
 
 import levels.LevelHandler;
 import creatures.Player;
+import states.*;
 import utils.Constants;
 
-import java.awt.*;
+import java.awt.Graphics;
 
 public class Game implements Runnable {
     private final GameWindow gameWindow;
@@ -12,6 +13,9 @@ public class Game implements Runnable {
 
     private Player player;
     private LevelHandler levelHandler;
+
+    private Menu menu;
+    private Play play;
 
     public Game() {
         init();
@@ -24,9 +28,9 @@ public class Game implements Runnable {
     }
 
     private void init() {
-        levelHandler = new LevelHandler(this);
-        player = new Player(10, 500, Constants.Player.SPRITE_WIDTH, Constants.Player.SPRITE_HEIGHT);
-        player.setLvlData(levelHandler.getLevel().getLvlData());
+        GameState.currentState = GameState.MENU;
+        menu = new Menu(this);
+        play = new Play(this);
     }
 
     public void start() {
@@ -35,13 +39,19 @@ public class Game implements Runnable {
     }
 
     public void update() {
-        player.update();
-        levelHandler.update();
+        switch (GameState.currentState) {
+            case MENU -> menu.update();
+            case PLAY -> play.update();
+            case OPTIONS -> System.out.println("Options");
+            case QUIT -> System.exit(0);
+        }
     }
 
     public void render(Graphics g) {
-        levelHandler.render(g);
-        player.render(g);
+        switch (GameState.currentState) {
+            case MENU -> menu.render(g);
+            case PLAY -> play.render(g);
+        }
     }
 
     @Override
@@ -89,10 +99,16 @@ public class Game implements Runnable {
     }
 
     public void focusLost() {
-        player.resetMovement();
+        if (GameState.currentState == GameState.PLAY) {
+            play.getPlayer().resetMovement();
+        }
     }
 
-    public Player getPlayer() {
-        return player;
+    public Menu getMenu() {
+        return menu;
+    }
+
+    public Play getPlay() {
+        return play;
     }
 }
