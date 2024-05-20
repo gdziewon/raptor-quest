@@ -23,8 +23,8 @@ public class LevelHandler {
         return level;
     }
 
-    public void render(Graphics g) {
-        level.render(g);
+    public void render(Graphics g, int xOffset) {
+        level.render(g, xOffset);
     }
 
     public void update() {

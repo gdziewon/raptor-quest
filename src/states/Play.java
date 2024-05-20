@@ -4,6 +4,7 @@ import creatures.Player;
 import levels.LevelHandler;
 import main.Game;
 import ui.PauseOverlay;
+import static utils.Constants.Config.*;
 import utils.Constants;
 
 import java.awt.*;
@@ -16,6 +17,10 @@ public class Play extends State implements StateMethods {
     private boolean paused = false;
     private PauseOverlay pauseOverlay;
 
+    private int lvlXOffset = 0;
+    private int tilesInLvl;
+    private int maxLvlXOffset;
+
     public Play(Game game) {
         super(game);
         init();
@@ -23,9 +28,11 @@ public class Play extends State implements StateMethods {
 
     public void init() {
         levelHandler = new LevelHandler(game);
-        player = new Player(10, 200 * Constants.Config.SCALE, Constants.Player.SPRITE_WIDTH, Constants.Player.SPRITE_HEIGHT);
+        player = new Player(60, 180 * SCALE, Constants.Player.SPRITE_WIDTH, Constants.Player.SPRITE_HEIGHT);
         player.setLvlData(levelHandler.getLevel().getLvlData());
-        pauseOverlay = new PauseOverlay();
+        pauseOverlay = new PauseOverlay(this);
+        tilesInLvl = levelHandler.getLevel().getLvlData().length;
+        maxLvlXOffset = tilesInLvl * Constants.Config.TILE_SIZE;
     }
 
     @Override
@@ -35,13 +42,31 @@ public class Play extends State implements StateMethods {
         else {
             player.update();
             levelHandler.update();
+            checkCloseToBorders();
         }
     }
 
+    private void checkCloseToBorders() {
+        int playerX = (int) player.getHitbox().x;
+        int diff = playerX - lvlXOffset;
+        if (diff < LEFT_BORDER) {
+            lvlXOffset -= (LEFT_BORDER - diff);
+        } else if (diff > RIGHT_BORDER) {
+            lvlXOffset += (diff - RIGHT_BORDER);
+        }
+
+        if (lvlXOffset < 0) {
+            lvlXOffset = 0;
+        } else if (lvlXOffset > maxLvlXOffset - Constants.Config.WIDTH) {
+            lvlXOffset = maxLvlXOffset - Constants.Config.WIDTH;
+        }
+    }
+
+
     @Override
     public void render(Graphics g) {
-        levelHandler.render(g);
-        player.render(g);
+        levelHandler.render(g, lvlXOffset);
+        player.render(g, lvlXOffset);
 
         if (paused)
             pauseOverlay.render(g);
@@ -95,5 +120,9 @@ public class Play extends State implements StateMethods {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public void unpause() {
+        this.paused = false;
     }
 }

@@ -117,9 +117,12 @@ public class Constants {
 
     public static class Assets {
         public static final String PLAYER_ASSETS = "raptor.png";
-        public static final String LEVEL_ASSETS = "lvl.png";
-        public static final String LEVEL_DATA = "lvl_data.png";
-        public static final String LEVEL_BG = "lvl_bg.png";
+        //public static final String LEVEL_ASSETS = "lvl.png";
+        //public static final String LEVEL_DATA = "lvl_data.png";
+        //public static final String LEVEL_BG = "lvl_bg.png";
+        public static final String LEVEL_ASSETS = "longer.png";
+        public static final String LEVEL_DATA = "longer_data.png";
+        public static final String LEVEL_BG = "longer_bg.png";
         public static final String MENU_BUTTON = "menu_button.png";
         public static final String FONT = "font.ttf";
         public static final String MENU_BG0 = "menu_bg0.png";
@@ -134,7 +137,7 @@ public class Constants {
         public final static int TILE_DEFAULT_SIZE = 24;
         public final static float SCALE = 2.5f;
         public final static int WIDTH_IN_TILES = 25;
-        public final static int HEIGHT_IN_TILES = 16;
+        public final static int HEIGHT_IN_TILES = 14;
         public final static int TILE_SIZE = (int)(TILE_DEFAULT_SIZE * SCALE);
         public final static int WIDTH = WIDTH_IN_TILES * TILE_SIZE;
         public final static int HEIGHT = HEIGHT_IN_TILES * TILE_SIZE;
@@ -142,5 +145,9 @@ public class Constants {
         // Game loop speed
         public final static int FPS = 120;
         public final static int UPS = 200;
+
+
+        public final static int LEFT_BORDER = (int) (0.2 * Constants.Config.WIDTH);
+        public final static int RIGHT_BORDER = (int) (0.8 * Constants.Config.WIDTH);
     }
 }

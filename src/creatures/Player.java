@@ -31,8 +31,8 @@ public class Player extends Creature{
         animationTick();
         setAnimation();
     }
-    public void render(Graphics g) {
-        g.drawImage(animations[playerAction][aniIndex], (int)(hitbox.x - HITBOX_X_OFFSET),(int)(hitbox.y - HITBOX_Y_OFFSET), width, height, null);
+    public void render(Graphics g, int xOffset) {
+        g.drawImage(animations[playerAction][aniIndex], (int)(hitbox.x - HITBOX_X_OFFSET) - xOffset,(int)(hitbox.y - HITBOX_Y_OFFSET), width, height, null);
         //drawHitbox(g);
     }
 
@@ -83,7 +83,7 @@ public class Player extends Creature{
                 inAir = true;
             }
         }
-        if (!(left || right || inAir)) {
+        if (!inAir && (left == right)) {
             return;
         }
 

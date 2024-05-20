@@ -2,9 +2,11 @@ package ui;
 
 import static utils.Constants.Assets;
 import static utils.Constants.Config;
-import static utils.Constants.UI.Menu.*;
 import static utils.Constants.UI.Pause.*;
 import static utils.Constants.UI.DEFAULT_FONT;
+
+import states.GameState;
+import states.Play;
 import utils.Loader;
 
 import java.awt.*;
@@ -16,9 +18,12 @@ public class PauseOverlay {
     private BufferedImage background;
     private int x, y, width, height;
     private SoundButton musicButton, sfxButton;
+    private UMButton menu, resume;
     private Font pauseFont, font;
+    private Play play;
 
-    public PauseOverlay() {
+    public PauseOverlay(Play play) {
+        this.play = play;
         init();
     }
 
@@ -32,6 +37,8 @@ public class PauseOverlay {
     private void createSoundButtons() {
         musicButton = new SoundButton(SOUND_B_X, MUSIC_B_Y, SOUND_B_WIDTH , SOUND_B_HEIGHT);
         sfxButton = new SoundButton(SOUND_B_X, SFX_B_Y, SOUND_B_WIDTH, SOUND_B_HEIGHT);
+        menu = new UMButton(SOUND_B_X - 100, SFX_B_Y + 100, SOUND_B_WIDTH, SOUND_B_HEIGHT);
+        resume = new UMButton(SOUND_B_X - 100, SFX_B_Y + 150, SOUND_B_WIDTH, SOUND_B_HEIGHT);
     }
 
     private void loadBackground() {
@@ -45,6 +52,8 @@ public class PauseOverlay {
     public void update() {
         musicButton.update();
         sfxButton.update();
+        menu.update();
+        resume.update();
     }
 
     public void render(Graphics g) {
@@ -58,6 +67,8 @@ public class PauseOverlay {
 
         musicButton.render(g);
         sfxButton.render(g);
+        menu.render(g);
+        resume.render(g);
         renderFont(g);
     }
 
@@ -96,6 +107,10 @@ public class PauseOverlay {
             musicButton.setClicked(true);
         } else if (isHovering(e, sfxButton)) {
             sfxButton.setClicked(true);
+        } else if (isHovering(e, menu)) {
+            menu.setClicked(true);
+        } else if (isHovering(e, resume)) {
+            resume.setClicked(true);
         }
     }
 
@@ -104,15 +119,24 @@ public class PauseOverlay {
             musicButton.setMuted(!musicButton.isMuted());
         } else if (isHovering(e, sfxButton) && sfxButton.isClicked()) {
             sfxButton.setMuted(!sfxButton.isMuted());
+        } else if (isHovering(e, menu) && menu.isClicked()) {
+            GameState.currentState = GameState.MENU;
+            play.unpause();
+        } else if (isHovering(e, resume) && resume.isClicked()) {
+            play.unpause();
         }
 
         musicButton.reset();
         sfxButton.reset();
+        menu.reset();
+        resume.reset();
     }
 
     public void mouseMoved(MouseEvent e) {
         musicButton.setHovered(isHovering(e, musicButton));
         sfxButton.setHovered(isHovering(e, sfxButton));
+        menu.setHovered(isHovering(e, menu));
+        resume.setHovered(isHovering(e, resume));
     }
 
     public void keyPressed(KeyEvent e) {

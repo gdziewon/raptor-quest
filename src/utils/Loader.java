@@ -30,10 +30,10 @@ public class Loader {
     }
 
     public static int[][] getLevelData(String path) {
-        int[][] lvlData = new int[Config.WIDTH_IN_TILES][Config.HEIGHT_IN_TILES];
         BufferedImage sheet = getAssets(path);
-        for (int i = 0; i < Config.WIDTH_IN_TILES; i++) {
-            for (int j = 0; j < Config.HEIGHT_IN_TILES; j++) {
+        int[][] lvlData = new int[sheet.getWidth()][sheet.getHeight()];
+        for (int i = 0; i < sheet.getWidth(); i++) {
+            for (int j = 0; j < sheet.getHeight(); j++) {
                 int pixel = sheet.getRGB(i, j);
                 if (pixel == Color.BLACK.getRGB()) {
                     lvlData[i][j] = 1;
@@ -44,6 +44,7 @@ public class Loader {
         }
         return lvlData;
     }
+
 
     public static Font getFont(String path, float size) {
         Font font = null;

@@ -24,12 +24,21 @@ public class Level {
 
     // TODO: delete this method
     private void changeImages() {
-        this.levelImage = levelImage.getSubimage(0, 0, levelImage.getWidth() - 16, levelImage.getHeight() - 16);
-        this.levelBackground = levelBackground.getSubimage(0, 0, levelBackground.getWidth() - 16, levelBackground.getHeight() - 16);
+        this.levelImage = levelImage.getSubimage(0, 0, levelImage.getWidth(), levelImage.getHeight());
+        this.levelBackground = levelBackground.getSubimage(0, 0, levelBackground.getWidth(), levelBackground.getHeight());
     }
 
-    public void render(Graphics g) {
+    public void render(Graphics g, int xOffset) {
+        // Clear the screen by drawing the background
         g.drawImage(levelBackground, 0, 0, Config.WIDTH, Config.HEIGHT, null);
-        g.drawImage(levelImage, 0, 0, Config.WIDTH, Config.HEIGHT, null);
+
+
+        // draw the visible portion of the level image scaled to fit the window
+        int startX = (int) (xOffset / Config.SCALE);
+        g.drawImage(levelImage,
+                0, 0, Config.WIDTH, Config.HEIGHT,
+                startX, 0, startX + (int)(Config.WIDTH / Config.SCALE), (int)(Config.HEIGHT / Config.SCALE),
+                null);
     }
+
 }

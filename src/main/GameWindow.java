@@ -6,8 +6,6 @@ import java.awt.event.WindowFocusListener;
 
 public class GameWindow extends JFrame {
     public GameWindow(GamePanel gamePanel) {
-
-
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.add(gamePanel);
         this.pack();
