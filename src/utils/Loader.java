@@ -1,5 +1,8 @@
 package utils;
 
+import creatures.Enemy;
+import creatures.Goblin;
+
 import static utils.Constants.*;
 
 import javax.imageio.ImageIO;
@@ -7,6 +10,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Loader {
@@ -34,8 +38,8 @@ public class Loader {
         int[][] lvlData = new int[sheet.getWidth()][sheet.getHeight()];
         for (int i = 0; i < sheet.getWidth(); i++) {
             for (int j = 0; j < sheet.getHeight(); j++) {
-                int pixel = sheet.getRGB(i, j);
-                if (pixel == Color.BLACK.getRGB()) {
+                Color pixel = new Color(sheet.getRGB(i, j));
+                if (pixel.getRed() == 1) {
                     lvlData[i][j] = 1;
                 } else {
                     lvlData[i][j] = 0;
@@ -45,6 +49,24 @@ public class Loader {
         return lvlData;
     }
 
+    public static ArrayList<Enemy> getEnemies(String path) {
+        ArrayList<Enemy> enemies = new ArrayList<>();
+        BufferedImage sheet = getAssets(path);
+        for (int i = 0; i < sheet.getWidth(); i++) {
+            for (int j = 0; j < sheet.getHeight(); j++) {
+                Color pixel = new Color(sheet.getRGB(i, j));
+                if (pixel.equals(Color.BLACK)) {
+                    continue;
+                }
+                int enemyType = pixel.getGreen();
+                if (enemyType == Enemies.GOBLIN) {
+                    Goblin goblin = new Goblin(i * Config.TILE_SIZE, j * Config.TILE_SIZE);
+                    enemies.add(goblin);
+                }
+            }
+        }
+        return enemies;
+    }
 
     public static Font getFont(String path, float size) {
         Font font = null;

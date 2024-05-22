@@ -16,9 +16,9 @@ public abstract class Creature {
     }
 
     // for debugging purposes
-    protected void drawHitbox(Graphics g) {
+    protected void drawHitbox(Graphics g, int xOffset) {
         g.setColor(Color.RED);
-        g.drawRect((int)hitbox.x, (int)hitbox.y, (int)hitbox.width, (int)hitbox.height);
+        g.drawRect((int)(hitbox.x - xOffset), (int)hitbox.y, (int)hitbox.width, (int)hitbox.height);
     }
 
     protected void initHitbox(float x, float y, int width, int height) {
