@@ -14,7 +14,7 @@ public class Utils {
 
     private static boolean IsSolid(float x, float y, int[][] lvlData) {
         int maxWidth = lvlData.length * Config.TILE_SIZE;
-        if (x < 0 || x >= maxWidth || y < 0 || y >= Config.HEIGHT) {
+        if (x < 0 || x >= maxWidth || y < 0 || y >= lvlData[0].length * Config.TILE_SIZE) {
             return true;
         }
 

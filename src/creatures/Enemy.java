@@ -17,7 +17,7 @@ public abstract class Enemy extends Creature{
     protected boolean firstUpdate = true;
     protected boolean inAir;
     protected float fallSpeed = 1f;
-    protected float walkSpeed = 0.3f * Constants.Config.SCALE;
+    protected float walkSpeed;
     protected int direction = LEFT;
     protected int tileYPos;
     protected int attackRange = Constants.Config.TILE_SIZE;
@@ -123,15 +123,19 @@ public abstract class Enemy extends Creature{
         updateBehaviour(lvlData, player);
         updateAnimation();
         updateAttackHitbox();
+
+        if (hitbox.intersects(player.getHitbox())) {
+            player.hurt(getDamage(enemyType) / 2);
+        }
     }
 
     protected abstract void updateAttackHitbox();
 
-    public void render(Graphics g, int xOffset) {
+    public void render(Graphics g, int xOffset, int yOffset) {
         Graphics2D g2d = (Graphics2D) g;
 
         int x = (int) (hitbox.x - hitboxXOffset) - xOffset;
-        int y = (int) (hitbox.y - hitboxYOffset);
+        int y = (int) (hitbox.y - hitboxYOffset) - yOffset;
 
         if (direction == RIGHT) {
             g2d.drawImage(animations[enemyState][aniIndex], x, y, width, height, null);
@@ -139,7 +143,13 @@ public abstract class Enemy extends Creature{
             g2d.drawImage(animations[enemyState][aniIndex], x + width, y, -width, height, null);
         }
 
-        //drawHitbox(g, xOffset);
+        drawHitbox(g, xOffset, yOffset);
+        drawAttackHitbox(g, xOffset, yOffset);
+    }
+
+    protected void drawAttackHitbox(Graphics g, int xOffset, int yOffset) {
+        g.setColor(Color.RED);
+        g.drawRect((int) (attackHitbox.x - xOffset), (int) (attackHitbox.y - yOffset), (int) attackHitbox.width, (int) attackHitbox.height);
     }
 
     public boolean isAlive() {
@@ -157,7 +167,7 @@ public abstract class Enemy extends Creature{
 
     protected void checkHit(Player player) {
         if (attackHitbox.intersects(player.getHitbox())) {
-            player.changeHealth(-getDamage(enemyType));
+            player.hurt(getDamage(enemyType));
         }
         attackChecked = true;
     }

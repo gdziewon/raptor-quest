@@ -12,9 +12,9 @@ public class Level {
     private BufferedImage levelImage;
     private BufferedImage levelBackground0, levelBackground1, levelBackground2;
 
-    public Level(int[][] lvlData) {
+    public Level(int[][] lvlData, String levelName) {
         this.lvlData = lvlData;
-        this.levelImage = Loader.getAssets(Assets.LEVEL_ASSETS);
+        this.levelImage = Loader.getAssets(levelName);
         this.levelBackground0 = Loader.getAssets(Assets.LEVEL_BG0);
         this.levelBackground1 = Loader.getAssets(Assets.LEVEL_BG1);
         this.levelBackground2 = Loader.getAssets(Assets.LEVEL_BG2);
@@ -31,13 +31,14 @@ public class Level {
         this.levelBackground0 = levelBackground0.getSubimage(0, 0, levelBackground0.getWidth(), levelBackground0.getHeight());
     }
 
-    public void render(Graphics g, int xOffset) {
+    public void render(Graphics g, int xOffset, int yOffset) {
         renderBackground(g, xOffset);
         // draw the visible portion of the level image scaled to fit the window
         int startX = (int) (xOffset / Config.SCALE);
+        int startY = (int) (yOffset / Config.SCALE);
         g.drawImage(levelImage,
                 0, 0, Config.WIDTH, Config.HEIGHT,
-                startX, 0, startX + (int)(Config.WIDTH / Config.SCALE), (int)(Config.HEIGHT / Config.SCALE),
+                startX, startY, startX + (int)(Config.WIDTH / Config.SCALE), startY+ (int)(Config.HEIGHT / Config.SCALE),
                 null);
     }
 

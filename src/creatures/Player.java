@@ -43,6 +43,9 @@ public class Player extends Creature{
     private float speed = PLAYER_SPEED;
     private int hitboxYOffset = PLAYER_HITBOX_Y_OFFSET;
 
+    boolean isInvoulnerable = false;
+    int invoulnerableTime = 0;
+
     public Player(float x, float y, int width, int height, Play play) {
         super(x, y, width, height);
         loadAnimations();
@@ -80,10 +83,10 @@ public class Player extends Creature{
         attackHitbox.y = hitbox.y + (int) (5 * PLAYER_SCALE);
     }
 
-    public void render(Graphics g, int xOffset) {
+    public void render(Graphics g, int xOffset, int yOffset) {
         Graphics2D g2d = (Graphics2D) g;
         int x = (int) (hitbox.x - PLAYER_HITBOX_X_OFFSET) - xOffset;
-        int y = (int) (hitbox.y - hitboxYOffset);
+        int y = (int) (hitbox.y - hitboxYOffset) - yOffset;
 
         if (isGoingRight) {
             g2d.drawImage(animations[playerAction][aniIndex], x, y, width, height, null);
@@ -91,7 +94,7 @@ public class Player extends Creature{
             g2d.drawImage(animations[playerAction][aniIndex], x + width, y, -width, height, null);
         }
 
-        drawHitbox(g, xOffset);
+        drawHitbox(g, xOffset, yOffset);
         //drawAttackHitbox(g, xOffset);
         drawUI(g);
     }
@@ -124,12 +127,24 @@ public class Player extends Creature{
         if (aniTick > ANIMATION_SPEED) {
             aniTick = 0;
             aniIndex++;
+
+            invoulnerableTime--;
+            if (invoulnerableTime <= 0) {
+                isInvoulnerable = false;
+            }
+
             if (aniIndex >= getAnimationLength(playerAction)) {
                 if (playerAction == DEAD) {
                     play.setGameOver(true);
                     aniIndex--;
                     return;
                 }
+
+                if (hurt) {
+                    isInvoulnerable = true;
+                    invoulnerableTime = 3;
+                }
+
                 aniIndex = 0;
                 attacking = false;
                 attackChecked = false;
@@ -201,14 +216,17 @@ public class Player extends Creature{
 
         float xSpeed = 0;
 
-        if (left) {
-            xSpeed -= speed;
-            isGoingRight = false;
+        if (!hurt) {
+            if (left) {
+                xSpeed -= speed;
+                isGoingRight = false;
+            }
+            if (right) {
+                xSpeed += speed;
+                isGoingRight = true;
+            }
         }
-        if (right) {
-            xSpeed += speed;
-            isGoingRight = true;
-        }
+
         if (!inAir) {
             if(!IsOnGround(hitbox, lvlData)) {
                 inAir = true;
@@ -246,14 +264,20 @@ public class Player extends Creature{
         }
     }
 
-    public void changeHealth(int value) {
+    public void heal(int value) {
         health += value;
         if (health >= maxHealth)
             health = maxHealth;
+    }
+
+    public void hurt(int value) {
+        if (hurt || isInvoulnerable)
+            return;
+
+        health -= value;
         if (health <= 0)
             health = 0;
-        if (value < 0)
-            hurt = true;
+        hurt = true;
     }
 
     private void loadAnimations() {
@@ -279,7 +303,7 @@ public class Player extends Creature{
             y -= PLAYER_HITBOX_HEIGHT / 2;
             hitbox.y += (float) PLAYER_HITBOX_HEIGHT / 2;
             hitbox.height = (float) PLAYER_HITBOX_HEIGHT / 2;
-            speed = PLAYER_SPEED / 2;
+            speed = PLAYER_SPEED / 3;
             hitboxYOffset += PLAYER_HITBOX_HEIGHT / 2;
         } else if (this.sneaking && !sneaking) {
             y += PLAYER_HITBOX_HEIGHT / 2;

@@ -2,12 +2,17 @@ package states;
 
 import creatures.EnemyHandler;
 import creatures.Player;
+import levels.Level;
 import levels.LevelHandler;
 import main.Game;
 import ui.GameOverOverlay;
 import ui.PauseOverlay;
+
+import static utils.Constants.Assets.LEVEL_ASSETS;
+import static utils.Constants.Assets.LEVEL_DATA;
 import static utils.Constants.Config.*;
 import utils.Constants;
+import utils.Loader;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -27,6 +32,10 @@ public class Play extends State implements StateMethods {
     private int tilesInLvl;
     private int maxLvlXOffset;
 
+    private int lvlYOffset = 0;
+    private int maxLvlYOffset;
+
+
     public Play(Game game) {
         super(game);
         init();
@@ -34,12 +43,15 @@ public class Play extends State implements StateMethods {
 
     public void init() {
         levelHandler = new LevelHandler(game);
+        levelHandler.setLevel( LEVEL_DATA, LEVEL_ASSETS);
         enemyHandler = new EnemyHandler(this);
         player = new Player(60, 180 * SCALE, Constants.Player.SPRITE_WIDTH, Constants.Player.SPRITE_HEIGHT, this);
         player.setLvlData(levelHandler.getLevel().getLvlData());
         pauseOverlay = new PauseOverlay(this);
         tilesInLvl = levelHandler.getLevel().getLvlData().length;
-        maxLvlXOffset = tilesInLvl * Constants.Config.TILE_SIZE;
+        maxLvlXOffset = tilesInLvl * Constants.Config.TILE_SIZE - TILE_SIZE / 2;
+
+        maxLvlYOffset = levelHandler.getLevel().getLvlData()[0].length * TILE_SIZE - TILE_SIZE / 2;
         gameOverOverlay = new GameOverOverlay(this);
     }
 
@@ -52,11 +64,16 @@ public class Play extends State implements StateMethods {
             enemyHandler.update(levelHandler.getLevel().getLvlData());
             levelHandler.update();
             checkCloseToBorders();
+            if (player.getHitbox().x >= maxLvlXOffset - 5)
+                gameOver = true;
         }
     }
 
     private void checkCloseToBorders() {
         int playerX = (int) player.getHitbox().x;
+        int playerY = (int) player.getHitbox().y;
+
+
         int diff = playerX - lvlXOffset;
         if (diff < LEFT_BORDER) {
             lvlXOffset -= (LEFT_BORDER - diff);
@@ -64,10 +81,23 @@ public class Play extends State implements StateMethods {
             lvlXOffset += (diff - RIGHT_BORDER);
         }
 
+        int diffY = playerY - lvlYOffset;
+        if (diffY > TOP_BORDER) {
+            lvlYOffset += (diffY - TOP_BORDER);
+        } else if (diffY < BOTTOM_BORDER) {
+            lvlYOffset -= (BOTTOM_BORDER - diffY);
+        }
+
         if (lvlXOffset < 0) {
             lvlXOffset = 0;
         } else if (lvlXOffset > maxLvlXOffset - Constants.Config.WIDTH) {
             lvlXOffset = maxLvlXOffset - Constants.Config.WIDTH;
+        }
+
+        if (lvlYOffset < 0) {
+            lvlYOffset = 0;
+        } else if (lvlYOffset > maxLvlYOffset - Constants.Config.HEIGHT) {
+            lvlYOffset = maxLvlYOffset - Constants.Config.HEIGHT;
         }
     }
 
@@ -85,9 +115,9 @@ public class Play extends State implements StateMethods {
 
     @Override
     public void render(Graphics g) {
-        levelHandler.render(g, lvlXOffset);
-        player.render(g, lvlXOffset);
-        enemyHandler.render(g, lvlXOffset);
+        levelHandler.render(g, lvlXOffset, lvlYOffset);
+        player.render(g, lvlXOffset, lvlYOffset);
+        enemyHandler.render(g, lvlXOffset, lvlYOffset);
 
         if (paused)
             pauseOverlay.render(g);
@@ -97,8 +127,8 @@ public class Play extends State implements StateMethods {
 
     @Override
     public void mouseCLicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1 && !gameOver)
-            player.setAttacking(true);
+//        if (e.getButton() == MouseEvent.BUTTON1 && !gameOver)
+//            player.setAttacking(true);
     }
 
     @Override
@@ -130,6 +160,7 @@ public class Play extends State implements StateMethods {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_A -> player.setLeft(true);
                 case KeyEvent.VK_D -> player.setRight(true);
+                case KeyEvent.VK_H -> player.setAttacking(true);
                 case KeyEvent.VK_SPACE -> player.setJump(true);
                 case KeyEvent.VK_SHIFT -> player.setSneaking(true);
                 case KeyEvent.VK_ESCAPE -> paused = !paused;

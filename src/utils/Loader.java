@@ -2,6 +2,7 @@ package utils;
 
 import creatures.Enemy;
 import creatures.Goblin;
+import creatures.Mushroom;
 
 import static utils.Constants.*;
 
@@ -62,6 +63,10 @@ public class Loader {
                 if (enemyType == Enemies.GOBLIN) {
                     Goblin goblin = new Goblin(i * Config.TILE_SIZE, j * Config.TILE_SIZE);
                     enemies.add(goblin);
+                }
+                if (enemyType == Enemies.MUSHROOM) {
+                    Mushroom mushroom = new Mushroom(i * Config.TILE_SIZE, j * Config.TILE_SIZE);
+                    enemies.add(mushroom);
                 }
             }
         }

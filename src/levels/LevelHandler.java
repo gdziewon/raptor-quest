@@ -1,6 +1,7 @@
 package levels;
 
 import main.Game;
+import utils.Constants;
 import utils.Loader;
 import static utils.Constants.Assets.*;
 
@@ -12,19 +13,18 @@ public class LevelHandler {
 
     public LevelHandler(Game game) {
         this.game = game;
-        this.level = new Level(Loader.getLevelData(LEVEL_DATA));
     }
 
-    public void setLevel(Level level) {
-        this.level = level;
+    public void setLevel(String levelData, String levelAssets) {
+        this.level = new Level(Loader.getLevelData(levelData), levelAssets);
     }
 
     public Level getLevel() {
         return level;
     }
 
-    public void render(Graphics g, int xOffset) {
-        level.render(g, xOffset);
+    public void render(Graphics g, int xOffset, int yOffset) {
+        level.render(g, xOffset, yOffset);
     }
 
     public void update() {

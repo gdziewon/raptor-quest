@@ -6,8 +6,6 @@ import utils.Loader;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageFilter;
 import java.util.ArrayList;
 
 public class EnemyHandler {
@@ -27,10 +25,10 @@ public class EnemyHandler {
         }
     }
 
-    public void render(Graphics g, int xOffset) {
+    public void render(Graphics g, int xOffset, int yOffset) {
          for (Enemy enemy : enemies) {
              if (enemy.isAlive())
-                enemy.render(g, xOffset);
+                enemy.render(g, xOffset, yOffset);
         }
     }
 
@@ -38,6 +36,7 @@ public class EnemyHandler {
         for (Enemy enemy : enemies) {
             if (enemy.isAlive() && attackBox.intersects(enemy.getHitbox())) {
                 enemy.hurt(10);
+                play.getPlayer().heal(5);
                 return;
             }
         }

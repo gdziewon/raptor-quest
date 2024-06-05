@@ -7,7 +7,8 @@ import java.util.Objects;
 
 public class Constants {
     public static class Enemies {
-        public static final int GOBLIN = 0;
+        public static final int GOBLIN = 1;
+        public static final int MUSHROOM = 2;
         public static final int IDLE = 2;
         public static final int RUNNING = 3;
         public static final int ATTACKING = 0;
@@ -16,7 +17,7 @@ public class Constants {
 
 
         // Player scale
-        public static final float GOBLIN_DEFAULT_SCALE = 0.6f;
+        public static final float GOBLIN_DEFAULT_SCALE = 0.5f;
         public static final float GOBLIN_SCALE = Config.SCALE * GOBLIN_DEFAULT_SCALE;
 
         // Player sprite size
@@ -30,12 +31,29 @@ public class Constants {
         public static final int GOBLIN_HITBOX_Y_OFFSET = (int) (70 * GOBLIN_SCALE);
 
         // Player speed
-        public static final float GOBLIN_SPEED = 0.7f * GOBLIN_SCALE;
+        public static final float GOBLIN_SPEED = 0.8f * GOBLIN_SCALE;
+
+        // Player scale
+        public static final float MUSHROOM_DEFAULT_SCALE = 0.62f;
+        public static final float MUSHROOM_SCALE = Config.SCALE * MUSHROOM_DEFAULT_SCALE;
+
+        // Player sprite size
+        public static final int MUSHROOM_SPRITE_SIZE = 150;
+        public static final int MUSHROOM_SIZE = (int)(MUSHROOM_SPRITE_SIZE * MUSHROOM_SCALE);
+
+        // Player hitbox size
+        public static final int MUSHROOM_HITBOX_WIDTH = (int)(22 * MUSHROOM_SCALE);
+        public static final int MUSHROOM_HITBOX_HEIGHT = (int) (37 * MUSHROOM_SCALE);
+        public static final int MUSHROOM_HITBOX_X_OFFSET = (int) (64 * MUSHROOM_SCALE);
+        public static final int MUSHROOM_HITBOX_Y_OFFSET = (int) (64 * MUSHROOM_SCALE);
+
+        // Player speed
+        public static final float MUSHROOM_SPEED = 0.45f * MUSHROOM_SCALE;
 
         // goblin animation lengths
         public static int getAnimationLength(int action, int enemyType) {
             switch (enemyType) {
-                case GOBLIN -> {
+                case GOBLIN, MUSHROOM -> {
                     return switch (action) {
                         case IDLE -> 4;
                         case RUNNING -> 8;
@@ -52,13 +70,15 @@ public class Constants {
         public static int getMaxHealth(int enemyType) {
             return switch (enemyType) {
                 case GOBLIN -> 20;
+                case MUSHROOM -> 35;
                 default -> 1;
             };
         }
 
         public static int getDamage(int enemyType) {
             return switch (enemyType) {
-                case GOBLIN -> 10;
+                case GOBLIN -> 15;
+                case MUSHROOM -> 20;
                 default -> 0;
             };
         }
@@ -146,7 +166,7 @@ public class Constants {
                 case IDLE -> 3;
                 case RUNNING -> 6;
                 case ATTACKING -> 4;
-                case HURT -> 1;
+                case HURT -> 3;
                 case DEAD -> 6;
                 case JUMP -> 1;
                 case FALLING -> 1;
@@ -212,6 +232,7 @@ public class Constants {
         public static final String SOUND_BUTTONS = "sound_buttons.png";
 
         public static final String GOBLIN_ASSETS = "goblin.png";
+        public static final String MUSHROOM_ASSETS = "mushroom.png";
 
     }
 
@@ -232,6 +253,8 @@ public class Constants {
 
         public final static int LEFT_BORDER = (int) (0.3 * Constants.Config.WIDTH);
         public final static int RIGHT_BORDER = (int) (0.7 * Constants.Config.WIDTH);
+        public final static int TOP_BORDER = (int) (0.6 * Constants.Config.HEIGHT);
+        public final static int BOTTOM_BORDER = (int) (0.4 * Constants.Config.HEIGHT);
 
         public static final int ANIMATION_SPEED = 25;
         public static final float GRAVITY = 0.05f * Player.PLAYER_SCALE;

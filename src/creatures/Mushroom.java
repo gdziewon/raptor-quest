@@ -3,25 +3,25 @@ package creatures;
 import utils.Constants;
 import utils.Loader;
 
-import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 import static utils.Constants.Enemies.*;
 
-public class Goblin extends Enemy{
-    private int attackBoxWidth = (int)(18 * Constants.Config.SCALE);
+public class Mushroom extends Enemy{
+    private int attackBoxWidth = (int)(22 * Constants.Config.SCALE);
     private int attackBoxHeight = (int)(16 * Constants.Config.SCALE);
     private int attackHitboxOffsetX = (int)(10 * Constants.Config.SCALE);
+    private int attackHitboxOffsetY = (int)(5 * Constants.Config.SCALE);
 
-    public Goblin(float x, float y) {
-        super(x, y, GOBLIN_SIZE, GOBLIN_SIZE, GOBLIN);
-        initHitbox(x, y, GOBLIN_HITBOX_WIDTH, GOBLIN_HITBOX_HEIGHT);
+    public Mushroom(float x, float y) {
+        super(x, y, MUSHROOM_SIZE, MUSHROOM_SIZE, MUSHROOM);
+        initHitbox(x, y, MUSHROOM_HITBOX_WIDTH, MUSHROOM_HITBOX_HEIGHT);
         initAttackHitbox(x, y, attackBoxWidth, attackBoxHeight);
-        hitboxXOffset = GOBLIN_HITBOX_X_OFFSET;
-        hitboxYOffset = GOBLIN_HITBOX_Y_OFFSET;
+        hitboxXOffset = MUSHROOM_HITBOX_X_OFFSET;
+        hitboxYOffset = MUSHROOM_HITBOX_Y_OFFSET;
         enemyState = IDLE;
-        walkSpeed = GOBLIN_SPEED;
+        walkSpeed = MUSHROOM_SPEED;
         loadAnimations();
     }
 
@@ -29,23 +29,12 @@ public class Goblin extends Enemy{
         attackHitbox = new Rectangle2D.Float(x, y, width, height);
     }
 
-    @Override
-    protected void updateAttackHitbox() {
-        if (direction == RIGHT) {
-            attackHitbox.x = hitbox.x + hitbox.width;
-        } else {
-            attackHitbox.x = hitbox.x - attackBoxWidth;
-        }
-        attackHitbox.y = hitbox.y;
-    }
-
-
-    public void loadAnimations() {
+    private void loadAnimations() {
         animations = new BufferedImage[5][8];
-        BufferedImage sheet = Loader.getAssets(Constants.Assets.GOBLIN_ASSETS);
+        BufferedImage sheet = Loader.getAssets(Constants.Assets.MUSHROOM_ASSETS);
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 8; j++) {
-                animations[i][j] = sheet.getSubimage(j * GOBLIN_SPRITE_SIZE, i * GOBLIN_SPRITE_SIZE, GOBLIN_SPRITE_SIZE, GOBLIN_SPRITE_SIZE);
+                animations[i][j] = sheet.getSubimage(j * MUSHROOM_SPRITE_SIZE, i * MUSHROOM_SPRITE_SIZE, MUSHROOM_SPRITE_SIZE, MUSHROOM_SPRITE_SIZE);
             }
         }
     }
@@ -76,5 +65,15 @@ public class Goblin extends Enemy{
                 }
             }
         }
+    }
+
+    @Override
+    protected void updateAttackHitbox() {
+        if (direction == RIGHT) {
+            attackHitbox.x = hitbox.x + hitbox.width;
+        } else {
+            attackHitbox.x = hitbox.x - attackBoxWidth;
+        }
+        attackHitbox.y = hitbox.y + attackHitboxOffsetY;
     }
 }
