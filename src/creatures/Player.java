@@ -94,9 +94,9 @@ public class Player extends Creature{
             g2d.drawImage(animations[playerAction][aniIndex], x + width, y, -width, height, null);
         }
 
-        drawHitbox(g, xOffset, yOffset);
+        //drawHitbox(g, xOffset, yOffset);
         //drawAttackHitbox(g, xOffset);
-        drawUI(g);
+        //drawUI(g);
     }
 
     private void drawAttackHitbox(Graphics g, int xOffset) {
@@ -104,7 +104,7 @@ public class Player extends Creature{
         g.drawRect((int) (attackHitbox.x - xOffset), (int) attackHitbox.y, (int) attackHitbox.width, (int) attackHitbox.height);
     }
 
-    private void drawUI(Graphics g) {
+    public void drawUI(Graphics g) {
         g.setColor(Color.RED);
         g.fillRect(HEALTH_BAR_X, HEALTH_BAR_Y, BAR_WIDTH + 2, BAR_HEIGHT);
         g.setColor(Color.GREEN);
@@ -204,7 +204,7 @@ public class Player extends Creature{
 
     private void updatePos() {
         moving = false;
-        if (jump) {
+        if (jump && !hurt) {
             if (!inAir) {
                 airSpeed = JUMP_SPEED;
                 inAir = true;
@@ -271,7 +271,7 @@ public class Player extends Creature{
     }
 
     public void hurt(int value) {
-        if (hurt || isInvoulnerable)
+        if (hurt || isInvoulnerable || value <= 0)
             return;
 
         health -= value;

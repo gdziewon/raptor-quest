@@ -46,7 +46,7 @@ public abstract class Enemy extends Creature{
                 aniIndex = 0;
                 switch (enemyState) {
                     case ATTACKING, HURT -> setState(IDLE);
-                    case DEAD -> alive = false;
+                    case DEAD -> alive = enemyType == LADY;
                 }
             }
         }
@@ -143,8 +143,8 @@ public abstract class Enemy extends Creature{
             g2d.drawImage(animations[enemyState][aniIndex], x + width, y, -width, height, null);
         }
 
-        drawHitbox(g, xOffset, yOffset);
-        drawAttackHitbox(g, xOffset, yOffset);
+        //drawHitbox(g, xOffset, yOffset);
+        //drawAttackHitbox(g, xOffset, yOffset);
     }
 
     protected void drawAttackHitbox(Graphics g, int xOffset, int yOffset) {
@@ -159,7 +159,10 @@ public abstract class Enemy extends Creature{
     public void hurt(int damage) {
         health -= damage;
         if (health <= 0) {
-            setState(DEAD);
+            if (enemyType == LADY)
+                alive = false;
+            else
+                setState(DEAD);
         } else {
             setState(HURT);
         }
@@ -178,5 +181,14 @@ public abstract class Enemy extends Creature{
 
     public int getEnemyState() {
         return enemyState;
+    }
+
+    public int getEnemyType() {
+        return enemyType;
+    }
+
+    public boolean isInCamera(int xOffset, int yOffset) {
+        return hitbox.x + hitbox.width > xOffset && hitbox.x < xOffset + Constants.Config.WIDTH &&
+                hitbox.y + hitbox.height > yOffset && hitbox.y < yOffset + Constants.Config.HEIGHT;
     }
 }

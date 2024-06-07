@@ -12,7 +12,6 @@ import static utils.Constants.Enemies.*;
 public class Goblin extends Enemy{
     private int attackBoxWidth = (int)(18 * Constants.Config.SCALE);
     private int attackBoxHeight = (int)(16 * Constants.Config.SCALE);
-    private int attackHitboxOffsetX = (int)(10 * Constants.Config.SCALE);
 
     public Goblin(float x, float y) {
         super(x, y, GOBLIN_SIZE, GOBLIN_SIZE, GOBLIN);

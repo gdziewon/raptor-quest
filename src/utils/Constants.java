@@ -6,14 +6,29 @@ import java.io.InputStream;
 import java.util.Objects;
 
 public class Constants {
+    public static class Effects {
+        public static final int BLOOD_ON_HIT = 0;
+
+        public static String getEffectAssets(int effectType) {
+            return switch (effectType) {
+                case BLOOD_ON_HIT -> Assets.BLOOD_ON_HIT_ASSETS;
+                default -> "";
+            };
+        }
+    }
+
+
     public static class Enemies {
         public static final int GOBLIN = 1;
         public static final int MUSHROOM = 2;
+        public static final int LADY = 3;
+
         public static final int IDLE = 2;
         public static final int RUNNING = 3;
         public static final int ATTACKING = 0;
         public static final int HURT = 4;
         public static final int DEAD = 1;
+        public static final int DANCE = 8;
 
 
         // Player scale
@@ -29,9 +44,10 @@ public class Constants {
         public static final int GOBLIN_HITBOX_HEIGHT = (int) (31 * GOBLIN_SCALE) ;
         public static final int GOBLIN_HITBOX_X_OFFSET = (int) (64 * GOBLIN_SCALE);
         public static final int GOBLIN_HITBOX_Y_OFFSET = (int) (70 * GOBLIN_SCALE);
-
         // Player speed
         public static final float GOBLIN_SPEED = 0.8f * GOBLIN_SCALE;
+
+
 
         // Player scale
         public static final float MUSHROOM_DEFAULT_SCALE = 0.62f;
@@ -46,6 +62,20 @@ public class Constants {
         public static final int MUSHROOM_HITBOX_HEIGHT = (int) (37 * MUSHROOM_SCALE);
         public static final int MUSHROOM_HITBOX_X_OFFSET = (int) (64 * MUSHROOM_SCALE);
         public static final int MUSHROOM_HITBOX_Y_OFFSET = (int) (64 * MUSHROOM_SCALE);
+
+
+        public static final float LADY_DEFAULT_SCALE = 0.5f;
+        public static final float LADY_SCALE = Config.SCALE * LADY_DEFAULT_SCALE;
+
+        public static final int LADY_SPRITE_WIDTH = 39;
+        public static final int LADY_SPRITE_HEIGHT = 53;
+        public static final int LADY_WIDTH = (int)(LADY_SPRITE_WIDTH * LADY_SCALE);
+        public static final int LADY_HEIGHT = (int)(LADY_SPRITE_HEIGHT * LADY_SCALE);
+
+        public static final int LADY_HITBOX_WIDTH = (int)(15 * LADY_SCALE);
+        public static final int LADY_HITBOX_HEIGHT = (int) (44 * LADY_SCALE);
+        public static final int LADY_HITBOX_X_OFFSET = (int) (10 * LADY_SCALE);
+        public static final int LADY_HITBOX_Y_OFFSET = (int) (9 * LADY_SCALE);
 
         // Player speed
         public static final float MUSHROOM_SPEED = 0.45f * MUSHROOM_SCALE;
@@ -63,12 +93,20 @@ public class Constants {
                         default -> 1;
                     };
                 }
+                case LADY -> {
+                    return switch (action) {
+                        case 0,1,2,3 -> 8;
+                        default -> 1;
+                    };
+
+                }
             }
             return 1;
         }
 
         public static int getMaxHealth(int enemyType) {
             return switch (enemyType) {
+                case LADY -> 10;
                 case GOBLIN -> 20;
                 case MUSHROOM -> 35;
                 default -> 1;
@@ -77,6 +115,7 @@ public class Constants {
 
         public static int getDamage(int enemyType) {
             return switch (enemyType) {
+                case LADY -> 0;
                 case GOBLIN -> 15;
                 case MUSHROOM -> 20;
                 default -> 0;
@@ -216,14 +255,14 @@ public class Constants {
     public static class Assets {
         public static final String PLAYER_ASSETS = "raptor.png";
         public static final String STATUS_BARS = "player_bars.png";
-        //public static final String LEVEL_ASSETS = "lvl.png";
-        //public static final String LEVEL_DATA = "lvl_data.png";
-        //public static final String LEVEL_BG = "lvl_bg.png";
-        public static final String LEVEL_ASSETS = "longer.png";
-        public static final String LEVEL_DATA = "longer_data.png";
-        public static final String LEVEL_BG0 = "longer_bg0.png";
-        public static final String LEVEL_BG1 = "longer_bg1.png";
-        public static final String LEVEL_BG2 = "longer_bg2.png";
+
+        public static final String LEVEL1_ASSETS = "longer.png";
+        public static final String LEVEL1_DATA = "longer_data.png";
+        public static final String LEVEL1_BG0 = "longer_bg0.png";
+        public static final String LEVEL1_BG1 = "longer_bg1.png";
+        public static final String LEVEL1_BG2 = "longer_bg2.png";
+
+
         public static final String MENU_BUTTON = "menu_button.png";
         public static final String FONT = "font.ttf";
         public static final String MENU_BG0 = "menu_bg0.png";
@@ -233,7 +272,9 @@ public class Constants {
 
         public static final String GOBLIN_ASSETS = "goblin.png";
         public static final String MUSHROOM_ASSETS = "mushroom.png";
+        public static final String LADY_ASSETS = "lady.png";
 
+        public static final String BLOOD_ON_HIT_ASSETS = "blood_on_hit.png";
     }
 
     public static class Config {
@@ -251,10 +292,10 @@ public class Constants {
         public final static int UPS = 200;
 
 
-        public final static int LEFT_BORDER = (int) (0.3 * Constants.Config.WIDTH);
-        public final static int RIGHT_BORDER = (int) (0.7 * Constants.Config.WIDTH);
-        public final static int TOP_BORDER = (int) (0.6 * Constants.Config.HEIGHT);
-        public final static int BOTTOM_BORDER = (int) (0.4 * Constants.Config.HEIGHT);
+        public final static int LEFT_BORDER = (int) (0.3 * Config.WIDTH);
+        public final static int RIGHT_BORDER = (int) (0.7 * Config.WIDTH);
+        public final static int TOP_BORDER = (int) (0.6 * Config.HEIGHT);
+        public final static int BOTTOM_BORDER = (int) (0.4 * Config.HEIGHT);
 
         public static final int ANIMATION_SPEED = 25;
         public static final float GRAVITY = 0.05f * Player.PLAYER_SCALE;

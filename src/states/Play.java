@@ -2,17 +2,16 @@ package states;
 
 import creatures.EnemyHandler;
 import creatures.Player;
-import levels.Level;
+import effects.EffectHandler;
 import levels.LevelHandler;
 import main.Game;
 import ui.GameOverOverlay;
 import ui.PauseOverlay;
 
-import static utils.Constants.Assets.LEVEL_ASSETS;
-import static utils.Constants.Assets.LEVEL_DATA;
+import static utils.Constants.Assets.LEVEL1_ASSETS;
+import static utils.Constants.Assets.LEVEL1_DATA;
 import static utils.Constants.Config.*;
 import utils.Constants;
-import utils.Loader;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -23,6 +22,7 @@ public class Play extends State implements StateMethods {
     private Player player;
     private LevelHandler levelHandler;
     private EnemyHandler enemyHandler;
+    private EffectHandler effectHandler;
     private boolean paused = false;
     private boolean gameOver = false;
     private PauseOverlay pauseOverlay;
@@ -43,9 +43,10 @@ public class Play extends State implements StateMethods {
 
     public void init() {
         levelHandler = new LevelHandler(game);
-        levelHandler.setLevel( LEVEL_DATA, LEVEL_ASSETS);
+        levelHandler.newLevel(1);
         enemyHandler = new EnemyHandler(this);
-        player = new Player(60, 180 * SCALE, Constants.Player.SPRITE_WIDTH, Constants.Player.SPRITE_HEIGHT, this);
+        effectHandler = new EffectHandler();
+        player = new Player(1 * TILE_SIZE, 26 * TILE_SIZE, Constants.Player.SPRITE_WIDTH, Constants.Player.SPRITE_HEIGHT, this);
         player.setLvlData(levelHandler.getLevel().getLvlData());
         pauseOverlay = new PauseOverlay(this);
         tilesInLvl = levelHandler.getLevel().getLvlData().length;
@@ -62,8 +63,10 @@ public class Play extends State implements StateMethods {
         else if (!gameOver) {
             player.update();
             enemyHandler.update(levelHandler.getLevel().getLvlData());
+            effectHandler.update();
             levelHandler.update();
             checkCloseToBorders();
+
             if (player.getHitbox().x >= maxLvlXOffset - 5)
                 gameOver = true;
         }
@@ -118,6 +121,8 @@ public class Play extends State implements StateMethods {
         levelHandler.render(g, lvlXOffset, lvlYOffset);
         player.render(g, lvlXOffset, lvlYOffset);
         enemyHandler.render(g, lvlXOffset, lvlYOffset);
+        effectHandler.render(g, lvlXOffset, lvlYOffset);
+        player.drawUI(g);
 
         if (paused)
             pauseOverlay.render(g);
@@ -188,5 +193,9 @@ public class Play extends State implements StateMethods {
 
     public void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;
+    }
+
+    public EffectHandler getEffectHandler() {
+        return effectHandler;
     }
 }

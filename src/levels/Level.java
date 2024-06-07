@@ -8,16 +8,19 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Level {
+    private final int levelNumber;
     private final int[][] lvlData;
     private BufferedImage levelImage;
     private BufferedImage levelBackground0, levelBackground1, levelBackground2;
 
-    public Level(int[][] lvlData, String levelName) {
+    public Level(int[][] lvlData, String levelName, String levelBackground0,
+                 String levelBackground1, String levelBackground2,  int levelNumber) {
         this.lvlData = lvlData;
         this.levelImage = Loader.getAssets(levelName);
-        this.levelBackground0 = Loader.getAssets(Assets.LEVEL_BG0);
-        this.levelBackground1 = Loader.getAssets(Assets.LEVEL_BG1);
-        this.levelBackground2 = Loader.getAssets(Assets.LEVEL_BG2);
+        this.levelBackground0 = Loader.getAssets(levelBackground0);
+        this.levelBackground1 = Loader.getAssets(levelBackground1);
+        this.levelBackground2 = Loader.getAssets(levelBackground2);
+        this.levelNumber = levelNumber;
         changeImages();
     }
 
